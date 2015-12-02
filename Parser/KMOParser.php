@@ -239,6 +239,10 @@ class KMOParser extends Parser
         $note = rtrim(substr($line, 209, 30));
         $transaction->setNote($note);
 
+        # Currency
+        $currency = substr($line, 65, 3);
+        $transaction->setCurrency($currency);
+
         return $transaction;
     }
 

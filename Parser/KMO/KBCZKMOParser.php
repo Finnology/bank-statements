@@ -5,11 +5,11 @@ namespace JakubZapletal\Component\BankStatement\Parser\KMO;
 use JakubZapletal\Component\BankStatement\Parser\KMOParser;
 
 /**
- * Class KBCZKBOParser
+ * Class KBCZKMOParser
  * @package JakubZapletal\Component\BankStatement\Parser\KMO
  * @author Michal Bystricky <michal.bystricky@finnology.com>
  */
-class KBCZKBOParser extends KMOParser
+class KBCZKMOParser extends KMOParser
 {
     const BANK_CODE = '0100';
 
