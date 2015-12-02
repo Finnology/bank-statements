@@ -3,6 +3,7 @@
 namespace JakubZapletal\Component\BankStatement\Parser;
 
 use JakubZapletal\Component\BankStatement\Statement\Statement;
+use JakubZapletal\Component\BankStatement\Statement\StatementInterface;
 use JakubZapletal\Component\BankStatement\Statement\Transaction\Transaction;
 
 /**
@@ -20,7 +21,7 @@ class KMOParser extends Parser
     const POSTING_CODE_DEBIT_REVERSAL  = 2;
     const POSTING_CODE_CREDIT_REVERSAL = 3;
 
-    /** @var array|Statement */
+    /** @var array|StatementInterface */
     protected $statements = [];
 
     /**
@@ -50,7 +51,7 @@ class KMOParser extends Parser
                 switch ($this->getLineType($line)) {
                     case self::LINE_TYPE_STATEMENT:
                         $statement = $this->parseStatementLine($line);
-                        $this->statements[ $statement->getAccountNumber() ][ $statement->getSerialNumber() ] = $statement;
+                        $this->statements[ $statement->getSerialNumber() ] = $statement;
 
                         $lastStatement = $statement;
                         break;
@@ -58,8 +59,11 @@ class KMOParser extends Parser
                         if (!$lastStatement instanceof Statement)
                             throw new \InvalidArgumentException('Cannot assign transaction to statement');
                         $transaction = $this->parseTransactionLine($line);
+                        $transaction->setReceiptId(
+                            $lastStatement->getSerialNumber() . '-' . $transaction->getReceiptId()
+                        );
 
-                        $this->statements[ $lastStatement->getAccountNumber() ][ $lastStatement->getSerialNumber() ]
+                        $this->statements[ $lastStatement->getSerialNumber() ]
                             ->addTransaction($transaction);
 
                         break;
@@ -68,6 +72,9 @@ class KMOParser extends Parser
         }
     }
 
+    /**
+     * @return array|Statement
+     */
     public function getStatements()
     {
         return $this->statements;
@@ -207,7 +214,9 @@ class KMOParser extends Parser
         // Cislo protiuctu
         $counterAccountNumber = ltrim(substr($line, 23, 16), '0');
         $counterAccountBank   = ltrim(substr($line, 39,  7), '0');
-        $transaction->setCounterAccountNumber($counterAccountNumber . "/" . $counterAccountBank);
+        $transaction
+            ->setCounterAccountNumber($counterAccountNumber)
+            ->setCounterAccountBankNumber($counterAccountBank);
 
         # Variable symbol
         $variableSymbol = ltrim(substr($line, 117, 10), '0');

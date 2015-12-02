@@ -2,12 +2,29 @@
 
 namespace JakubZapletal\Component\BankStatement\Statement\Transaction;
 
+use JakubZapletal\Component\BankStatement\Statement\Statement;
+
 class Transaction implements TransactionInterface
 {
+    /**
+     * @var Statement
+     */
+    protected $statement;
+
+    /**
+     * @var string
+     */
+    protected $currency;
+
     /**
      * @var string
      */
     protected $counterAccountNumber;
+
+    /**
+     * @var string
+     */
+    protected $counterAccountBankNumber;
 
     /**
      * @var string
@@ -50,7 +67,24 @@ class Transaction implements TransactionInterface
     protected $dateCreated;
 
     /**
-     * @return string
+     * @inheritdoc
+     */
+    public function setStatement(Statement $statement)
+    {
+        $this->statement = $statement;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getStatement()
+    {
+        return $this->statement;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getCounterAccountNumber()
     {
@@ -58,19 +92,33 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @param $counterAccountNumber
-     *
-     * @return $this
+     * @inheritdoc
+     */
+    public function getCounterAccountBankNumber()
+    {
+        return $this->counterAccountBankNumber;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function setCounterAccountNumber($counterAccountNumber)
     {
         $this->counterAccountNumber = $counterAccountNumber;
-
         return $this;
     }
 
     /**
-     * @return int
+     * @inheritdoc
+     */
+    public function setCounterAccountBankNumber($counterAccountBankNumber)
+    {
+        $this->counterAccountBankNumber = $counterAccountBankNumber;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getConstantSymbol()
     {
@@ -78,19 +126,16 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @param $constantSymbol
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setConstantSymbol($constantSymbol)
     {
         $this->constantSymbol = $constantSymbol;
-
         return $this;
     }
 
     /**
-     * @return float
+     * @inheritdoc
      */
     public function getCredit()
     {
@@ -98,19 +143,16 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @param $credit
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setCredit($credit)
     {
         $this->credit = (float) $credit;
-
         return $this;
     }
 
     /**
-     * @return \DateTime|null
+     * @inheritdoc
      */
     public function getDateCreated()
     {
@@ -118,19 +160,16 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @param \DateTime $dateCreated
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setDateCreated(\DateTime $dateCreated)
     {
         $this->dateCreated = $dateCreated;
-
         return $this;
     }
 
     /**
-     * @return float
+     * @inheritdoc
      */
     public function getDebit()
     {
@@ -138,19 +177,16 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @param $debit
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setDebit($debit)
     {
         $this->debit = (float) $debit;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getNote()
     {
@@ -158,19 +194,16 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @param $note
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setNote($note)
     {
         $this->note = $note;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getReceiptId()
     {
@@ -178,19 +211,16 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @param $receiptId
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setReceiptId($receiptId)
     {
         $this->receiptId = $receiptId;
-
         return $this;
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getSpecificSymbol()
     {
@@ -198,19 +228,16 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @param $specificSymbol
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setSpecificSymbol($specificSymbol)
     {
         $this->specificSymbol = $specificSymbol;
-
         return $this;
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getVariableSymbol()
     {
@@ -218,14 +245,28 @@ class Transaction implements TransactionInterface
     }
 
     /**
-     * @param $variableSymbol
-     *
-     * @return $this
+     * @inheritdoc
      */
     public function setVariableSymbol($variableSymbol)
     {
         $this->variableSymbol = $variableSymbol;
-
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
     }
 }

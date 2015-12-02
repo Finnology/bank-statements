@@ -96,8 +96,10 @@ class CSOBCZParser extends XMLParser
     protected function parseStatementNode(Crawler $crawler)
     {
         # Account number
-        $accountNumber = $crawler->filter('S25_CISLO_UCTU')->text();
-        $this->statement->setAccountNumber($accountNumber);
+        $accountNumber = explode('/', $crawler->filter('S25_CISLO_UCTU')->text());
+        $this->statement
+            ->setAccountNumber($accountNumber[0])
+            ->setAccountBankNumber($accountNumber[1]);
 
         # Date last balance
         $date = $crawler->filter('S60_DATUM')->text();
@@ -234,7 +236,9 @@ class CSOBCZParser extends XMLParser
         # Counter account number
         $counterAccountNumber = $crawler->filter('PART_ACCNO')->text();
         $codeOfBank = $crawler->filter('PART_BANK_ID')->text();
-        $transaction->setCounterAccountNumber($counterAccountNumber . '/' . $codeOfBank);
+        $transaction
+            ->setCounterAccountNumber($counterAccountNumber)
+            ->setCounterAccountBankNumber($codeOfBank);
 
         # Specific symbol
         $specificSymbol = $crawler->filter('S86_SPECSYMOUR')->text();

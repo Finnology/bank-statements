@@ -76,11 +76,23 @@ interface StatementInterface
     public function getAccountNumber();
 
     /**
+     * @return string
+     */
+    public function getAccountBankNumber();
+
+    /**
      * @param $accountNumber
      *
      * @return $this
      */
     public function setAccountNumber($accountNumber);
+
+    /**
+     * @param $accountBankNumber
+     *
+     * @return $this
+     */
+    public function setAccountBankNumber($accountBankNumber);
 
     /**
      * @return TransactionInterface[]

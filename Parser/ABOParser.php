@@ -124,8 +124,10 @@ class ABOParser extends Parser
     protected function parseStatementLine($line)
     {
         # Account number
-        $accountNumber = ltrim(substr($line, 3, 16), '0');
-        $this->statement->setAccountNumber($accountNumber);
+        $accountNumber = explode('/', ltrim(substr($line, 3, 16), '0'));
+        $this->statement
+            ->setAccountNumber($accountNumber[0])
+            ->setAccountBankNumber($accountNumber[1]);
 
         # Date last balance
         $date = substr($line, 39, 6);
@@ -236,7 +238,9 @@ class ABOParser extends Parser
         # Counter account number
         $counterAccountNumber = ltrim(substr($line, 19, 16), '0');
         $codeOfBank = substr($line, 73, 4);
-        $transaction->setCounterAccountNumber($counterAccountNumber . '/' . $codeOfBank);
+        $transaction
+            ->setCounterAccountNumber($counterAccountNumber)
+            ->setCounterAccountBankNumber($codeOfBank);
 
         # Specific symbol
         $specificSymbol = ltrim(substr($line, 81, 10), '0');
