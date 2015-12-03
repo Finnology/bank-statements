@@ -59,13 +59,16 @@ class KMOParser extends Parser
                         if (!$lastStatement instanceof Statement)
                             throw new \InvalidArgumentException('Cannot assign transaction to statement');
                         $transaction = $this->parseTransactionLine($line);
-                        $transaction->setReceiptId(
-                            $lastStatement->getSerialNumber() . '-' . $transaction->getReceiptId()
-                        );
 
-                        $this->statements[ $lastStatement->getSerialNumber() ]
-                            ->addTransaction($transaction);
+                        if ($transaction !== FALSE)
+                        {
+                            $transaction->setReceiptId(
+                                $lastStatement->getSerialNumber() . '-' . $transaction->getReceiptId()
+                            );
 
+                            $this->statements[ $lastStatement->getSerialNumber() ]
+                                ->addTransaction($transaction);
+                        }
                         break;
                 }
             }
@@ -175,9 +178,6 @@ class KMOParser extends Parser
         }
         $statement->setCreditTurnover($creditTurnover);
 
-        // TODO Nazov uctu
-        // TODO IBAN
-
         return $statement;
     }
 
@@ -210,6 +210,12 @@ class KMOParser extends Parser
                 $transaction->setCredit($amount * (-1));
                 break;
         }
+
+        if ($this->mode == Parser::MODE_CREDIT_ONLY && $postingCode != self::POSTING_CODE_CREDIT)
+            return FALSE;
+
+        if ($this->mode == Parser::MODE_DEBIT_ONLY && $postingCode != self::POSTING_CODE_DEBIT)
+            return FALSE;
 
         // Cislo protiuctu
         $counterAccountNumber = ltrim(substr($line, 23, 16), '0');

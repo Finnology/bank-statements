@@ -2,6 +2,7 @@
 
 namespace JakubZapletal\Component\BankStatement\Parser\XML;
 
+use JakubZapletal\Component\BankStatement\Parser\Parser;
 use JakubZapletal\Component\BankStatement\Parser\XMLParser;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\CssSelector\CssSelector;
@@ -63,7 +64,11 @@ class CSOBCZParser extends XMLParser
     public function parseAndAddTransaction(Crawler $node)
     {
         $transaction = $this->parseTransactionNode($node);
-        $this->statement->addTransaction($transaction);
+
+        if ($transaction !== FALSE)
+        {
+            $this->statement->addTransaction($transaction);
+        }
     }
 
     /**
@@ -224,6 +229,13 @@ class CSOBCZParser extends XMLParser
                 $transaction->setCredit($amount * (-1));
                 break;
         }
+
+        if ($this->mode == Parser::MODE_CREDIT_ONLY && $postingCode != self::POSTING_CODE_CREDIT)
+            return FALSE;
+
+        if ($this->mode == Parser::MODE_DEBIT_ONLY && $postingCode != self::POSTING_CODE_DEBIT)
+            return FALSE;
+
 
         # Variable symbol
         $variableSymbol = $crawler->filter('S86_VARSYMOUR')->text();

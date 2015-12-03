@@ -7,10 +7,17 @@ use JakubZapletal\Component\BankStatement\Statement\Transaction\Transaction;
 
 abstract class Parser implements ParserInterface
 {
+    const MODE_ALL         = 0;
+    const MODE_CREDIT_ONLY = 1;
+    const MODE_DEBIT_ONLY  = 2;
+
     /**
      * @var Statement
      */
     protected $statement;
+
+    /** @var int */
+    protected $mode = self::MODE_ALL;
 
     /**
      * @param string $filePath
@@ -34,6 +41,16 @@ abstract class Parser implements ParserInterface
     public function getStatement()
     {
         return $this->statement;
+    }
+
+    /**
+     * @param $mode
+     * @return $this
+     */
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
+        return $this;
     }
 
     /**

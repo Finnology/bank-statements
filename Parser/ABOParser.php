@@ -71,7 +71,11 @@ class ABOParser extends Parser
                         break;
                     case self::LINE_TYPE_TRANSACTION:
                         $transaction = $this->parseTransactionLine($line);
-                        $this->statement->addTransaction($transaction);
+
+                        if ($transaction !== FALSE)
+                        {
+                            $this->statement->addTransaction($transaction);
+                        }
                         break;
                 }
             }
@@ -226,6 +230,13 @@ class ABOParser extends Parser
                 $transaction->setCredit($amount * (-1));
                 break;
         }
+
+        if ($this->mode == Parser::MODE_CREDIT_ONLY && $postingCode != self::POSTING_CODE_CREDIT)
+            return FALSE;
+
+        if ($this->mode == Parser::MODE_DEBIT_ONLY && $postingCode != self::POSTING_CODE_DEBIT)
+            return FALSE;
+
 
         # Variable symbol
         $variableSymbol = ltrim(substr($line, 61, 10), '0');

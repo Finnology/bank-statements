@@ -26,4 +26,10 @@ interface ParserInterface
      * @return StatementInterface
      */
     public function getStatement();
+
+    /**
+     * @param $mode
+     * @return ParserInterface
+     */
+    public function setMode($mode);
 }
